@@ -303,6 +303,132 @@
     transition: opacity 0.3s, transform 0.3s; z-index: 100;
   }
   .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+  /* ── CALENDAR VIEW ── */
+  #view-calendar { flex-direction: column; background: var(--bg); }
+
+  .cal-header {
+    padding: 1rem 1.2rem; display: flex; align-items: center; gap: 0.8rem;
+    border-bottom: 1px solid var(--border); background: rgba(8,8,16,0.95);
+    backdrop-filter: blur(8px); position: sticky; top: 0; z-index: 10;
+  }
+  .cal-title { font-family: 'Rajdhani', sans-serif; font-size: 1.3rem; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase; }
+
+  .cal-body { flex: 1; overflow-y: auto; padding: 1rem 1rem 8rem; }
+
+  .cal-month-nav {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-bottom: 1rem;
+  }
+  .cal-month-label {
+    font-family: 'Rajdhani', sans-serif; font-size: 1.2rem; font-weight: 600;
+    letter-spacing: 0.08em; text-transform: uppercase; color: var(--text);
+  }
+  .cal-nav-btn {
+    background: var(--surface2); border: 1px solid var(--border); color: var(--text-dim);
+    width: 2.2rem; height: 2.2rem; border-radius: 8px; cursor: pointer;
+    font-size: 1.1rem; display: flex; align-items: center; justify-content: center;
+    transition: border-color 0.15s, color 0.15s;
+  }
+  .cal-nav-btn:active { border-color: var(--text-muted); color: var(--text); }
+
+  .cal-grid {
+    display: grid; grid-template-columns: repeat(7, 1fr);
+    gap: 3px; margin-bottom: 1.2rem;
+  }
+  .cal-dow {
+    text-align: center; font-size: 0.62rem; letter-spacing: 0.1em;
+    text-transform: uppercase; color: var(--text-muted);
+    padding: 0.3rem 0; font-family: 'Inter', sans-serif;
+  }
+  .cal-day {
+    aspect-ratio: 1; border-radius: 8px; display: flex; align-items: center;
+    justify-content: center; font-family: 'Rajdhani', sans-serif;
+    font-size: 0.95rem; font-weight: 600; cursor: pointer;
+    position: relative; transition: opacity 0.1s;
+    border: 1px solid transparent;
+    user-select: none;
+  }
+  .cal-day.empty { cursor: default; }
+  .cal-day.today { border-color: var(--text-muted); }
+  .cal-day.workout-a { background: rgba(107,79,168,0.3); color: #c8b0ff; }
+  .cal-day.workout-b { background: rgba(46,122,82,0.3); color: #a0e8bc; }
+  .cal-day.workout-ab {
+    background: linear-gradient(135deg, rgba(107,79,168,0.3) 50%, rgba(46,122,82,0.3) 50%);
+    color: var(--text);
+  }
+  .cal-day.in-range { background: rgba(140,108,200,0.1); border-radius: 0; }
+  .cal-day.range-start, .cal-day.range-end {
+    background: rgba(107,79,168,0.55) !important; color: #fff !important;
+    border-color: rgba(140,108,200,0.7) !important; border-radius: 8px !important;
+  }
+  .cal-day:not(.empty):active { opacity: 0.7; }
+
+  .cal-dot {
+    position: absolute; bottom: 3px; left: 50%; transform: translateX(-50%);
+    width: 4px; height: 4px; border-radius: 50%;
+  }
+  .cal-dot-a { background: #8b6cc4; }
+  .cal-dot-b { background: #3d8f62; }
+
+  .cal-range-bar {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 10px; padding: 0.8rem 1rem;
+    display: flex; flex-direction: column; gap: 0.5rem;
+    margin-bottom: 0.8rem;
+  }
+  .cal-range-hint {
+    font-size: 0.75rem; color: var(--text-muted); letter-spacing: 0.06em; text-align: center;
+  }
+  .cal-range-info {
+    display: flex; align-items: center; justify-content: space-between;
+    font-size: 0.82rem; color: var(--text-dim);
+  }
+  .cal-range-dates {
+    font-family: 'Rajdhani', sans-serif; font-size: 1rem; font-weight: 600; color: var(--text);
+  }
+  .cal-range-count { font-family: 'Rajdhani', sans-serif; font-size: 0.9rem; color: var(--text-muted); }
+  .btn-clear-range {
+    background: none; border: none; color: var(--text-muted);
+    font-size: 0.75rem; cursor: pointer; letter-spacing: 0.06em;
+    text-decoration: underline; text-underline-offset: 2px; padding: 0;
+  }
+
+  .cal-export-bar {
+    position: fixed; bottom: 0; left: 0; right: 0;
+    padding: 0.8rem 1rem;
+    background: linear-gradient(to top, var(--bg) 55%, transparent);
+    display: flex; gap: 0.8rem;
+  }
+  .btn-export-txt {
+    flex: 1; padding: 1rem; border: none; border-radius: 10px;
+    background: linear-gradient(135deg, #6b4fa8, #4a2d7a); color: #e8d8ff;
+    font-family: 'Rajdhani', sans-serif; font-size: 1.05rem; font-weight: 700;
+    letter-spacing: 0.08em; text-transform: uppercase; cursor: pointer;
+    transition: opacity 0.15s, transform 0.1s;
+  }
+  .btn-export-txt:active { opacity: 0.85; transform: scale(0.98); }
+  .btn-export-txt:disabled { opacity: 0.35; }
+
+  .cal-legend {
+    display: flex; gap: 1rem; justify-content: center; margin-bottom: 1rem;
+  }
+  .cal-legend-item {
+    display: flex; align-items: center; gap: 0.4rem;
+    font-size: 0.72rem; color: var(--text-muted); letter-spacing: 0.06em;
+  }
+  .cal-legend-dot { width: 10px; height: 10px; border-radius: 3px; }
+  .leg-a { background: rgba(107,79,168,0.5); }
+  .leg-b { background: rgba(46,122,82,0.5); }
+
+  .btn-lista {
+    margin-left: auto; padding: 0.4rem 0.9rem; font-size: 0.72rem;
+    background: var(--surface2); border: 1px solid var(--border);
+    color: var(--text-dim); border-radius: 8px; cursor: pointer;
+    font-family: 'Rajdhani', sans-serif; letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
 </style>
 </head>
 <body>
@@ -341,7 +467,7 @@
     <span style="color:var(--text-muted)">dni</span>
   </div>
 
-  <button class="btn-history" onclick="showView('history')">Historia treningów</button>
+  <button class="btn-history" onclick="showView('calendar')">Kalendarz & Historia</button>
 
   <div class="backup-bar">
     <button class="btn-backup" onclick="exportJSON()">⬇ Eksportuj dane</button>
@@ -373,6 +499,48 @@
     <div class="hist-title">Historia</div>
   </div>
   <div class="hist-body" id="hist-body"></div>
+</div>
+
+
+<!-- CALENDAR -->
+<div id="view-calendar" class="view">
+  <div class="cal-header">
+    <button class="back-btn" onclick="showView('home')">←</button>
+    <div class="cal-title">Kalendarz</div>
+    <button class="btn-history" style="margin-left:auto;padding:0.4rem 0.9rem;font-size:0.72rem;width:auto" onclick="showView('history')">Lista</button>
+  </div>
+  <div class="cal-body">
+
+    <div class="cal-legend">
+      <div class="cal-legend-item"><div class="cal-legend-dot leg-a"></div>Dzień A</div>
+      <div class="cal-legend-item"><div class="cal-legend-dot leg-b"></div>Dzień B</div>
+    </div>
+
+    <div class="cal-month-nav">
+      <button class="cal-nav-btn" onclick="calPrevMonth()">‹</button>
+      <div class="cal-month-label" id="cal-month-label">Marzec 2026</div>
+      <button class="cal-nav-btn" onclick="calNextMonth()">›</button>
+    </div>
+
+    <div class="cal-grid" id="cal-grid"></div>
+
+    <div class="cal-range-bar">
+      <div class="cal-range-hint" id="cal-range-hint">Kliknij dzień aby zacząć zaznaczać zakres</div>
+      <div class="cal-range-info" id="cal-range-info" style="display:none">
+        <div>
+          <div class="cal-range-dates" id="cal-range-dates"></div>
+          <div class="cal-range-count" id="cal-range-count"></div>
+        </div>
+        <button class="btn-clear-range" onclick="clearRange()">wyczyść</button>
+      </div>
+    </div>
+
+  </div>
+  <div class="cal-export-bar">
+    <button class="btn-export-txt" id="btn-export-txt" onclick="exportTxt()" disabled>
+      Eksportuj do TXT
+    </button>
+  </div>
 </div>
 
 <div class="toast" id="toast"></div>
@@ -461,12 +629,7 @@ const DAYS = {
 let currentDay = 'A';
 let autosaveTimer = null;
 
-function showView(name) {
-  document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
-  document.getElementById('view-' + name).classList.add('active');
-  if (name === 'history') renderHistory();
-  if (name === 'home') updateStreak();
-}
+// showView defined below with calendar support
 
 function openDay(day) {
   currentDay = day;
@@ -644,6 +807,241 @@ function toggleHist(header) {
   const details = header.nextElementSibling;
   details.classList.toggle('open');
   header.querySelector('.hist-toggle').textContent = details.classList.contains('open') ? '▴' : '▾';
+}
+
+
+// ── CALENDAR ──
+let calYear = new Date().getFullYear();
+let calMonth = new Date().getMonth();
+let rangeStart = null;
+let rangeEnd = null;
+
+const PL_MONTHS = ['Styczeń','Luty','Marzec','Kwiecień','Maj','Czerwiec',
+                   'Lipiec','Sierpień','Wrzesień','Październik','Listopad','Grudzień'];
+const PL_DAYS_SHORT = ['Pn','Wt','Śr','Cz','Pt','Sb','Nd'];
+const PL_DAYS_LONG = ['poniedziałek','wtorek','środa','czwartek','piątek','sobota','niedziela'];
+const PL_MONTHS_GEN = ['stycznia','lutego','marca','kwietnia','maja','czerwca',
+                       'lipca','sierpnia','września','października','listopada','grudnia'];
+
+function showView(name) {
+  document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+  document.getElementById('view-' + name).classList.add('active');
+  if (name === 'history') renderHistory();
+  if (name === 'home') updateStreak();
+  if (name === 'calendar') renderCalendar();
+}
+
+function getWorkoutMap() {
+  const history = JSON.parse(localStorage.getItem('trening_history') || '[]');
+  const map = {};
+  history.forEach(entry => {
+    const d = new Date(entry.date);
+    const key = d.toISOString().slice(0,10);
+    if (!map[key]) map[key] = [];
+    if (!map[key].includes(entry.day)) map[key].push(entry.day);
+  });
+  return map;
+}
+
+function calPrevMonth() {
+  calMonth--;
+  if (calMonth < 0) { calMonth = 11; calYear--; }
+  renderCalendar();
+}
+function calNextMonth() {
+  calMonth++;
+  if (calMonth > 11) { calMonth = 0; calYear++; }
+  renderCalendar();
+}
+
+function renderCalendar() {
+  document.getElementById('cal-month-label').textContent = PL_MONTHS[calMonth] + ' ' + calYear;
+  const grid = document.getElementById('cal-grid');
+  grid.innerHTML = '';
+  const wmap = getWorkoutMap();
+  const today = new Date().toISOString().slice(0,10);
+
+  // Day-of-week headers (Mon first)
+  PL_DAYS_SHORT.forEach(d => {
+    const el = document.createElement('div');
+    el.className = 'cal-dow';
+    el.textContent = d;
+    grid.appendChild(el);
+  });
+
+  // First day of month (Mon=0)
+  const firstDay = new Date(calYear, calMonth, 1);
+  let startDow = firstDay.getDay(); // 0=Sun
+  startDow = startDow === 0 ? 6 : startDow - 1; // convert to Mon-first
+
+  for (let i = 0; i < startDow; i++) {
+    const el = document.createElement('div');
+    el.className = 'cal-day empty';
+    grid.appendChild(el);
+  }
+
+  const daysInMonth = new Date(calYear, calMonth + 1, 0).getDate();
+  for (let d = 1; d <= daysInMonth; d++) {
+    const dateStr = `${calYear}-${String(calMonth+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+    const el = document.createElement('div');
+    el.className = 'cal-day';
+    el.textContent = d;
+
+    if (dateStr === today) el.classList.add('today');
+
+    const workouts = wmap[dateStr] || [];
+    if (workouts.includes('A') && workouts.includes('B')) {
+      el.classList.add('workout-ab');
+    } else if (workouts.includes('A')) {
+      el.classList.add('workout-a');
+      const dot = document.createElement('div');
+      dot.className = 'cal-dot cal-dot-a';
+      el.appendChild(dot);
+    } else if (workouts.includes('B')) {
+      el.classList.add('workout-b');
+      const dot = document.createElement('div');
+      dot.className = 'cal-dot cal-dot-b';
+      el.appendChild(dot);
+    }
+
+    // Range highlighting
+    if (rangeStart && rangeEnd) {
+      const lo = rangeStart < rangeEnd ? rangeStart : rangeEnd;
+      const hi = rangeStart < rangeEnd ? rangeEnd : rangeStart;
+      if (dateStr > lo && dateStr < hi) el.classList.add('in-range');
+      if (dateStr === lo) el.classList.add('range-start');
+      if (dateStr === hi) el.classList.add('range-end');
+    } else if (rangeStart && dateStr === rangeStart) {
+      el.classList.add('range-start');
+    }
+
+    el.addEventListener('click', () => onDayClick(dateStr));
+    grid.appendChild(el);
+  }
+
+  updateRangeBar();
+}
+
+function onDayClick(dateStr) {
+  if (!rangeStart || (rangeStart && rangeEnd)) {
+    rangeStart = dateStr;
+    rangeEnd = null;
+  } else {
+    if (dateStr === rangeStart) {
+      rangeStart = null;
+    } else if (dateStr < rangeStart) {
+      rangeEnd = rangeStart;
+      rangeStart = dateStr;
+    } else {
+      rangeEnd = dateStr;
+    }
+  }
+  renderCalendar();
+}
+
+function clearRange() {
+  rangeStart = null;
+  rangeEnd = null;
+  renderCalendar();
+}
+
+function updateRangeBar() {
+  const hint = document.getElementById('cal-range-hint');
+  const info = document.getElementById('cal-range-info');
+  const btn = document.getElementById('btn-export-txt');
+
+  if (!rangeStart) {
+    hint.style.display = '';
+    hint.textContent = 'Kliknij dzień aby zacząć zaznaczać zakres';
+    info.style.display = 'none';
+    btn.disabled = true;
+    return;
+  }
+
+  if (rangeStart && !rangeEnd) {
+    hint.style.display = '';
+    const d = new Date(rangeStart + 'T12:00:00');
+    hint.textContent = `Zaznaczono: ${d.getDate()} ${PL_MONTHS_GEN[d.getMonth()]} — kliknij drugi dzień`;
+    info.style.display = 'none';
+    btn.disabled = true;
+    return;
+  }
+
+  hint.style.display = 'none';
+  info.style.display = '';
+
+  const lo = rangeStart < rangeEnd ? rangeStart : rangeEnd;
+  const hi = rangeStart < rangeEnd ? rangeEnd : rangeStart;
+  const dLo = new Date(lo + 'T12:00:00');
+  const dHi = new Date(hi + 'T12:00:00');
+
+  document.getElementById('cal-range-dates').textContent =
+    `${dLo.getDate()} ${PL_MONTHS_GEN[dLo.getMonth()]} – ${dHi.getDate()} ${PL_MONTHS_GEN[dHi.getMonth()]} ${dHi.getFullYear()}`;
+
+  const history = JSON.parse(localStorage.getItem('trening_history') || '[]');
+  const inRange = history.filter(e => {
+    const d = new Date(e.date).toISOString().slice(0,10);
+    return d >= lo && d <= hi;
+  });
+  document.getElementById('cal-range-count').textContent =
+    `${inRange.length} trening${inRange.length === 1 ? '' : inRange.length < 5 ? 'i' : 'ów'}`;
+
+  btn.disabled = inRange.length === 0;
+}
+
+function exportTxt() {
+  if (!rangeStart || !rangeEnd) return;
+  const lo = rangeStart < rangeEnd ? rangeStart : rangeEnd;
+  const hi = rangeStart < rangeEnd ? rangeEnd : rangeStart;
+
+  const history = JSON.parse(localStorage.getItem('trening_history') || '[]');
+  const entries = history
+    .filter(e => { const d = new Date(e.date).toISOString().slice(0,10); return d >= lo && d <= hi; })
+    .sort((a,b) => new Date(a.date) - new Date(b.date));
+
+  if (!entries.length) return;
+
+  const dLo = new Date(lo + 'T12:00:00');
+  const dHi = new Date(hi + 'T12:00:00');
+  const exportDate = new Date().toLocaleDateString('pl-PL', {day:'numeric', month:'long', year:'numeric'});
+
+  let txt = '=== DZIENNIK TRENINGOWY ===\n';
+  txt += `Okres: ${dLo.getDate()} ${PL_MONTHS_GEN[dLo.getMonth()]} – ${dHi.getDate()} ${PL_MONTHS_GEN[dHi.getMonth()]} ${dHi.getFullYear()}\n`;
+  txt += `Eksport: ${exportDate}\n`;
+  txt += `Łącznie treningów: ${entries.length}\n`;
+  const cntA = entries.filter(e=>e.day==='A').length;
+  const cntB = entries.filter(e=>e.day==='B').length;
+  txt += `Dzień A: ${cntA}  |  Dzień B: ${cntB}\n`;
+  txt += '\n' + '='.repeat(35) + '\n\n';
+
+  entries.forEach(entry => {
+    const d = new Date(entry.date);
+    const dow = PL_DAYS_LONG[d.getDay() === 0 ? 6 : d.getDay()-1];
+    const dateLabel = `${dow.charAt(0).toUpperCase()+dow.slice(1)}, ${d.getDate()} ${PL_MONTHS_GEN[d.getMonth()]} ${d.getFullYear()}`;
+    txt += `--- ${dateLabel} | DZIEŃ ${entry.day} ---\n`;
+
+    entry.exercises.forEach((ex, i) => {
+      const filled = ex.sets.filter(s => s.weight !== '—' || s.reps !== '—');
+      if (!filled.length) return;
+      txt += `${i+1}. ${ex.name}\n`;
+      filled.forEach((s, si) => {
+        txt += `   Seria ${si+1}: ${s.weight}kg × ${s.reps} powt.\n`;
+      });
+    });
+    txt += '\n';
+  });
+
+  txt += '='.repeat(35) + '\n';
+  txt += 'Plik wygenerowany przez aplikację Trening (unsword.github.io/treningi)\n';
+
+  const blob = new Blob([txt], { type: 'text/plain;charset=utf-8' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `trening_${lo}_${hi}.txt`;
+  a.click();
+  URL.revokeObjectURL(url);
+  showToast('📄 Pobrano!', '#6b4fa8');
 }
 
 // ── STREAK ──
