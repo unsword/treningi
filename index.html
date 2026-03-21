@@ -117,6 +117,13 @@
   }
   .btn-day-b:active { box-shadow: 0 2px 12px rgba(46, 122, 82, 0.5); }
 
+  .btn-day-c {
+    background: linear-gradient(135deg, #8a4a2e, #5c2d18);
+    color: #f0d8c8;
+    box-shadow: 0 4px 24px rgba(138, 74, 46, 0.35), 0 0 0 1px rgba(160,90,55,0.2);
+  }
+  .btn-day-c:active { box-shadow: 0 2px 12px rgba(138, 74, 46, 0.5); }
+
   .btn-day-label { font-size: 0.72rem; font-family: 'Inter', sans-serif; font-weight: 400; opacity: 0.7; letter-spacing: 0.12em; }
   .btn-day-inner { display: flex; flex-direction: column; align-items: flex-start; gap: 0.1rem; }
   .btn-day-arrow { font-size: 1.6rem; opacity: 0.6; }
@@ -176,6 +183,7 @@
   .day-header-dot { width: 10px; height: 10px; border-radius: 50%; margin-left: auto; flex-shrink: 0; }
   .dot-a { background: var(--accent-a); box-shadow: 0 0 8px var(--accent-a); }
   .dot-b { background: var(--accent-b); box-shadow: 0 0 8px var(--accent-b); }
+  .dot-c { background: #8a4a2e; box-shadow: 0 0 8px rgba(138,74,46,0.8); }
 
   /* autosave indicator */
   .autosave-indicator {
@@ -219,6 +227,7 @@
   .set-input:focus { outline: none; }
   .set-input.focus-a:focus { border-color: var(--accent-a); }
   .set-input.focus-b:focus { border-color: var(--accent-b); }
+  .set-input.focus-c:focus { border-color: #8a4a2e; }
   .set-input::-webkit-outer-spin-button,
   .set-input::-webkit-inner-spin-button { -webkit-appearance: none; }
   .remove-set-btn {
@@ -249,6 +258,7 @@
   .save-btn:active { opacity: 0.85; transform: scale(0.98); }
   .save-btn-a { background: linear-gradient(135deg, #6b4fa8, #4a2d7a); color: #e8d8ff; }
   .save-btn-b { background: linear-gradient(135deg, #2e7a52, #1a5236); color: #c8f0da; }
+  .save-btn-c { background: linear-gradient(135deg, #8a4a2e, #5c2d18); color: #f0d8c8; }
 
   /* ── HISTORY ── */
   #view-history { flex-direction: column; background: var(--bg); }
@@ -353,6 +363,7 @@
   .cal-day.today { border-color: var(--text-muted); }
   .cal-day.workout-a { background: rgba(107,79,168,0.3); color: #c8b0ff; }
   .cal-day.workout-b { background: rgba(46,122,82,0.3); color: #a0e8bc; }
+  .cal-day.workout-c { background: rgba(138,74,46,0.3); color: #f0d0b8; }
   .cal-day.workout-ab {
     background: linear-gradient(135deg, rgba(107,79,168,0.3) 50%, rgba(46,122,82,0.3) 50%);
     color: var(--text);
@@ -420,6 +431,8 @@
   .cal-legend-dot { width: 10px; height: 10px; border-radius: 3px; }
   .leg-a { background: rgba(107,79,168,0.5); }
   .leg-b { background: rgba(46,122,82,0.5); }
+  .leg-c { background: rgba(138,74,46,0.5); }
+  .cal-dot-c { background: #8a4a2e; }
 
   .btn-lista {
     margin-left: auto; padding: 0.4rem 0.9rem; font-size: 0.72rem;
@@ -427,6 +440,37 @@
     color: var(--text-dim); border-radius: 8px; cursor: pointer;
     font-family: 'Rajdhani', sans-serif; letter-spacing: 0.08em;
     text-transform: uppercase;
+  }
+
+
+  /* ── GHOST / PREVIOUS SESSION ── */
+  .ghost-prev {
+    padding: 0.25rem 0.8rem 0.5rem;
+    font-size: 0.72rem;
+    color: var(--text-muted);
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    letter-spacing: 0.04em;
+  }
+  .ghost-label {
+    font-size: 0.62rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--text-muted);
+    opacity: 0.55;
+    white-space: nowrap;
+  }
+  .ghost-value {
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 0.88rem;
+    font-weight: 600;
+    color: var(--text-dim);
+    opacity: 0.7;
+  }
+  .ghost-arrow {
+    opacity: 0.3;
+    font-size: 0.7rem;
   }
 
 </style>
@@ -456,6 +500,14 @@
       <div class="btn-day-inner">
         <span class="btn-day-label">Dzień</span>
         <span>B</span>
+      </div>
+      <span class="btn-day-arrow">→</span>
+    </button>
+
+    <button class="btn-day btn-day-c" onclick="openDay('C')">
+      <div class="btn-day-inner">
+        <span class="btn-day-label">Dzień</span>
+        <span>C</span>
       </div>
       <span class="btn-day-arrow">→</span>
     </button>
@@ -514,6 +566,7 @@
     <div class="cal-legend">
       <div class="cal-legend-item"><div class="cal-legend-dot leg-a"></div>Dzień A</div>
       <div class="cal-legend-item"><div class="cal-legend-dot leg-b"></div>Dzień B</div>
+      <div class="cal-legend-item"><div class="cal-legend-dot leg-c"></div>Dzień C</div>
     </div>
 
     <div class="cal-month-nav">
@@ -624,6 +677,14 @@ const DAYS = {
     'Wyciskanie nad głowę – maszyna',
     'Glute Bridge',
   ],
+  C: [
+    'Suwnica (wąska pozycja)',
+    'Odwodzenie bioder na maszynie',
+    'Spięcie bioder na maszynie',
+    'Hip Thrust',
+    'Face Pulls',
+    'Triceps Pushdown',
+  ],
 };
 
 let currentDay = 'A';
@@ -645,13 +706,32 @@ function openDay(day) {
 function renderExercises(day) {
   const list = document.getElementById('exercises-list');
   list.innerHTML = '';
+  const lastSession = getLastSessionData(day);
+
   DAYS[day].forEach((name, idx) => {
+    // build ghost hint
+    let ghostHtml = '';
+    if (lastSession && lastSession.exercises && lastSession.exercises[idx]) {
+      const summary = ghostSummary(lastSession.exercises[idx].sets);
+      if (summary) {
+        const prevDate = new Date(lastSession.date);
+        const dateLabel = prevDate.toLocaleDateString('pl-PL', {day:'numeric', month:'short'});
+        ghostHtml = `
+          <div class="ghost-prev">
+            <span class="ghost-label">poprzednio ${dateLabel}</span>
+            <span class="ghost-arrow">›</span>
+            <span class="ghost-value">${summary}</span>
+          </div>`;
+      }
+    }
+
     const card = document.createElement('div');
     card.className = 'exercise-card';
     card.innerHTML = `
       <div class="exercise-name">
         <span class="exercise-num">${idx + 1}.</span>${name}
       </div>
+      ${ghostHtml}
       <div class="sets-table" id="sets-${idx}">
         <div class="sets-header">
           <span></span><span>Ciężar (kg)</span><span>Powtórzenia</span><span></span>
@@ -902,6 +982,11 @@ function renderCalendar() {
       const dot = document.createElement('div');
       dot.className = 'cal-dot cal-dot-b';
       el.appendChild(dot);
+    } else if (workouts.includes('C')) {
+      el.classList.add('workout-c');
+      const dot = document.createElement('div');
+      dot.className = 'cal-dot cal-dot-c';
+      el.appendChild(dot);
     }
 
     // Range highlighting
@@ -1059,6 +1144,44 @@ function fillWeightDown(input) {
       allWeights[i].value = val;
       allWeights[i].dispatchEvent(new Event('input', { bubbles: true }));
     }
+  }
+}
+
+
+function getLastSessionData(day) {
+  const history = JSON.parse(localStorage.getItem('trening_history') || '[]');
+  // find most recent entry for this day (skip today)
+  const todayStr = new Date().toISOString().slice(0,10);
+  const prev = history
+    .filter(e => e.day === day)
+    .filter(e => new Date(e.date).toISOString().slice(0,10) !== todayStr)
+    .sort((a,b) => new Date(b.date) - new Date(a.date))[0];
+  return prev || null;
+}
+
+function ghostSummary(sets) {
+  // filter out empty sets
+  const filled = (sets || []).filter(s => s.weight && s.weight !== '—' && s.reps && s.reps !== '—');
+  if (!filled.length) return null;
+
+  const weights = filled.map(s => parseFloat(s.weight));
+  const reps    = filled.map(s => parseInt(s.reps));
+  const allSameW = weights.every(w => w === weights[0]);
+  const allSameR = reps.every(r => r === reps[0]);
+
+  if (allSameW && allSameR) {
+    // clean: Xkg × Y × Z serii
+    const sLabel = filled.length === 1 ? '1 seria' : filled.length < 5 ? `${filled.length} serie` : `${filled.length} serii`;
+    return `${weights[0]}kg × ${reps[0]} × ${sLabel}`;
+  } else {
+    // find max volume set
+    let bestIdx = 0, bestVol = 0;
+    filled.forEach((s,i) => {
+      const vol = parseFloat(s.weight) * parseInt(s.reps);
+      if (vol > bestVol) { bestVol = vol; bestIdx = i; }
+    });
+    const best = filled[bestIdx];
+    return `najlepiej: ${best.weight}kg × ${best.reps}`;
   }
 }
 
